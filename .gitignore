@@ -1,0 +1,9 @@
+playbook*
+ubuntu-20.04-amd64-disk001.vmdk
+.vagrant
+ubuntu*
+*.vmdk
+.vmdk
+.vagrant/*
+box.ovf
+.Vagrantfile.kate-swp
