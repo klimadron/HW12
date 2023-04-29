@@ -1,5 +1,9 @@
 - hosts: sql
+  become_user: root
+  become: true
   any_errors_fatal: true
+  vars:
+    mysql_root: 'password'
   roles:
     - role: mrlesmithjr.netplan
       become: yes
@@ -24,21 +28,15 @@
           renderer: networkd
           ethernets:
             enp0s3:
-                addresses:
-                - 10.0.2.16/24
-                routes:
-                - to: 10.0.2.0/24
-                  via: 10.0.2.2
-#                - to: default
-#                  via: 10.0.2.2
-                - to: 192.168.13.0/24
-                  via: 10.0.2.2
+                dhcp4: true
             enp0s8:
                 addresses: [192.168.101.2/24]
                 dhcp4: false
-                routes:
-                -   to: default
-                    via: 192.168.101.1
+                nameservers:
+                  addresses: [8.8.8.8, 1.1.1.1]
+                # routes:
+                # -   to: default
+                #     via: 192.168.101.1
             enp0s9:
                 addresses:
                 - 192.168.100.3/24
@@ -51,4 +49,54 @@
   - name: Apply netplan
     command: sudo netplan apply
     async: 10
-    poll: 0 
+    poll: 0
+  - name: install Mysql
+    become: yes
+    ansible.builtin.apt:
+      update_cache: yes
+      name: 
+       - mysql-server
+       - mysql-client
+       - python3-mysqldb
+  - name: start SQL
+    ansible.builtin.systemd:
+      name: mysql
+      state: started
+      enabled: yes
+  - name: Copy Mysql conf
+    ansible.builtin.template:
+      src: "./mysqld.cnf"
+      dest: "/etc/mysql/mysql.conf.d/mysqld.cnf"
+  - name: Enable remote login to mysql
+    lineinfile:
+      path: /etc/mysql/mysql.conf.d/mysqld.cnf
+      regexp: '^bind-address'
+      line: 'bind-address = 0.0.0.0'
+      backup: yes    
+  - name: Restart service MYSQL, in all cases!!!!!
+    ansible.builtin.systemd:
+      name: mysql
+      state: restarted
+  - name: Create a new database with name 'wordpress_db'
+    community.mysql.mysql_db:
+      name: wordpress_db
+      login_user: root
+      state: present
+  - name: Create user with password, all database privileges and 'WITH GRANT OPTION' in wordpress_db
+    community.mysql.mysql_user:
+      state: present
+      name: wpuser
+      password: password
+      host: '%'
+      priv: 
+        'wordpress_db.*': 'ALL,GRANT'
+  - name: Ensure root user can only login from localhost
+    mysql_user:
+#      login_password: "{{ mysql_root_password }}"
+      check_implicit_admin: yes
+      name: root
+      host: "{{ item }}"
+#      password: "{{ mysql_root_password }}"
+      state: present
+    with_items:
+      - 0.0.0.0

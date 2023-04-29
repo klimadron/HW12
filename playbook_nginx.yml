@@ -26,10 +26,7 @@
           renderer: networkd
           ethernets:
             enp0s3:
-              addresses: [10.0.2.14/24]
-              routes:
-              - to : 10.0.2.0/24
-                via: 10.0.2.2
+              dhcp4: yes
             enp0s8:
               dhcp4: no
               addresses: [192.168.13.230/24]
@@ -48,6 +45,7 @@
     become: yes
     ansible.builtin.apt:
       name: nginx
+      update_cache: yes
       state: latest
   - name: start nginx
     ansible.builtin.systemd:
@@ -60,4 +58,4 @@
   - name: Copy nginx conf
     ansible.builtin.template:
       src: "./default"
-      dest: "/etc/nginx/sites-enabled/default"
+      dest: "/etc/nginx/sites-available/default"

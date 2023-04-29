@@ -1,5 +1,7 @@
 - hosts: apache
   any_errors_fatal: true
+  become: yes
+  become: true
   roles:
     - role: mrlesmithjr.netplan
       become: yes
@@ -47,4 +49,66 @@
   - name: Apply netplan
     command: sudo netplan apply
     async: 10
-    poll: 0 
+    poll: 0
+  - name: install Apache
+    become: yes
+    ansible.builtin.apt:
+      name: 
+       - apache2
+       - mysql-client
+       - ghostscript
+       - ghostscript
+       - libapache2-mod-php
+       - php
+       - php-curl
+       - php-json
+       - php-mbstring
+       - php-mysql
+       - php-xml
+       - php-cgi
+      update_cache: yes
+      state: latest
+  - name: start Apache
+    ansible.builtin.systemd:
+      name: apache2
+      state: started
+  - name: Download Wordpress
+    unarchive:
+      src: https://wordpress.org/latest.tar.gz
+      dest: /var/www/html/
+      remote_src: True    
+  - name: Copy Apache conf
+    ansible.builtin.template:
+      src: "./apache2.conf"
+      dest: "/etc/apache2/apache2.conf"
+  - name: Copy Apache conf2
+    ansible.builtin.template:
+      src: "./000-default.conf"
+      dest: "/etc/apache2/sites-available/000-default.conf"
+  # - name: Copy using inline content
+  #   ansible.builtin.copy:
+  #     src: "./wp-config.php"
+  #     dest: "/var/www/html/wordpress/wp-config.php"
+  #     force: true
+
+  - name: Change file ownership, group and permissions
+    ansible.builtin.file:
+      path: /var/www/html/wordpress/
+      owner: www-data
+      group: www-data
+      mode: '755'   
+  - name: Create a directory if it does not exist
+    ansible.builtin.file:
+      path: /var/www/html/wordpress/wp-content/uploads/
+      state: directory
+      owner: www-data
+      group: www-data
+      mode: '0755'   
+  - name: Reload Apache
+    ansible.builtin.systemd:
+      name: apache2
+      state: reloaded    
+  
+         
+
+      
