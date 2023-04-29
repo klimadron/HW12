@@ -23,11 +23,15 @@
           version: 2
           renderer: networkd
           ethernets:
-            # enp0s3:
-            #   dhcp4: true
-            #   match:
-            #     macaddress: 02:e9:99:ad:26:c9
-            #   set-name: enp0s3
+            enp0s3:
+              addresses: [10.0.2.15/24]
+              routes:
+              - to : 10.0.2.0/24
+                via: 10.0.2.2
+              # dhcp4: true
+              # match:
+              #   macaddress: 02:e9:99:ad:26:c9
+              # set-name: enp0s3
             enp0s8:
               addresses: [192.168.102.11/24]
               gateway4: 192.168.102.1

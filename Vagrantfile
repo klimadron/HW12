@@ -53,13 +53,8 @@ Vagrant.configure("2") do |config|
     s.inline = <<-SHELL
       echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
       echo #{ssh_pub_key} >> /root/.ssh/authorized_keys
-      # echo #{ssh_pub_key} >> /root/.ssh/knows_hosts
     SHELL
 
   end
-  # config.vm.provision "shell", inline: <<-SHELL
-  #   cat /home/klima/Документы/HW16/HW16/ansible.key.pub >> /home/vagrant/.ssh/authorized_keys
-  #   SHELL
-  # Create shared folder
   config.vm.synced_folder ".", "/vagrant", disabled: true
 end

@@ -1,7 +1,5 @@
-- hosts: nginx
+- hosts: sql
   any_errors_fatal: true
-  become_user: root
-  become: true
   roles:
     - role: mrlesmithjr.netplan
       become: yes
@@ -26,38 +24,31 @@
           renderer: networkd
           ethernets:
             enp0s3:
-              addresses: [10.0.2.14/24]
-              routes:
-              - to : 10.0.2.0/24
-                via: 10.0.2.2
+                addresses:
+                - 10.0.2.16/24
+                routes:
+                - to: 10.0.2.0/24
+                  via: 10.0.2.2
+#                - to: default
+#                  via: 10.0.2.2
+                - to: 192.168.13.0/24
+                  via: 10.0.2.2
             enp0s8:
-              dhcp4: no
-              addresses: [192.168.13.230/24]
-              gateway4: 192.168.13.1
-              nameservers:
-                  addresses: [8.8.8.8, 1.1.1.1]
+                addresses: [192.168.101.2/24]
+                dhcp4: false
+                routes:
+                -   to: default
+                    via: 192.168.101.1
             enp0s9:
-              addresses: [192.168.102.10/24]
-              gateway4: 192.168.102.1
+                addresses:
+                - 192.168.100.3/24
+                routes:
+                -  to: 192.168.102.0/24
+                   via: 192.168.100.3
+
+
   tasks:
   - name: Apply netplan
     command: sudo netplan apply
     async: 10
-    poll: 0
-  - name: install nginx
-    become: yes
-    ansible.builtin.apt:
-      name: nginx
-      state: latest
-  - name: start nginx
-    ansible.builtin.systemd:
-      name: nginx
-      state: started
-  - name: Copy nginx conf
-    ansible.builtin.template:
-      src: "./nginx.conf"
-      dest: "/etc/nginx/nginx.conf" 
-  - name: Copy nginx conf
-    ansible.builtin.template:
-      src: "./default"
-      dest: "/etc/nginx/sites-enabled/default"
+    poll: 0 
