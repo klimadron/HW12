@@ -53,7 +53,6 @@ Vagrant.configure("2") do |config|
       echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
       echo #{ssh_pub_key} >> /root/.ssh/authorized_keys
     SHELL
-
   end
   config.vm.synced_folder ".", "/vagrant", disabled: true
 end
