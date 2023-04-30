@@ -1,20 +1,11 @@
 server {
-	listen 80 default_server;
-	listen [::]:80 default_server;
-
-	root /var/www/html;
-
-	# Add index.php to the list if you are using PHP
-	#index index.html index.htm index.nginx-debian.html;
-
-	server_name 192.168.13.230;
-
-	location / {
-				 proxy_pass http://192.168.102.11/wordpress/;
-		# First attempt to serve request as file, then
-		# as directory, then fall back to displaying a 404.
-		 try_files $uri $uri/ =404;
-	}
-
+  listen 80;
+  server_name 192.168.13.230;
+    location / {
+      access_log off;
+      proxy_pass http://192.168.102.11;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header Host $host;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
 }
-

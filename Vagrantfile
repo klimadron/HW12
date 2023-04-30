@@ -49,7 +49,7 @@ Vagrant.configure("2") do |config|
     end
   end
   config.vm.provision "shell" do |s|
-    ssh_pub_key = File.readlines("/home/klima/Документы/HW16/HW16/id_rsa.pub").first.strip
+    ssh_pub_key = File.readlines("./id_rsa.pub").first.strip
     s.inline = <<-SHELL
       echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
       echo #{ssh_pub_key} >> /root/.ssh/authorized_keys

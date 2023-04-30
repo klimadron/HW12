@@ -37,52 +37,11 @@ define( 'DB_CHARSET', 'utf8mb4' );
 /** The database collate type. Don't change this if in doubt. */
 define( 'DB_COLLATE', '' );
 define ('DISALLOW_FILE_EDIT', false  );
-/**#@+
- * Authentication unique keys and salts.
- *
- * Change these to different unique phrases! You can generate these using
- * the {@link https://api.wordpress.org/secret-key/1.1/salt/ WordPress.org secret-key service}.
- *
- * You can change these at any point in time to invalidate all existing cookies.
- * This will force all users to have to log in again.
- *
- * @since 2.6.0
- */
-define( 'AUTH_KEY',         '}v8 qqDym6*Llb>rO_pV#Hmd+|EP%j_Z`@wgDJ>;+n#:l]Vm2GLt<JsA#@s5.%Pn' );
-define( 'SECURE_AUTH_KEY',  ':^/-mRjc)yeqp*NC}6$u0(>-sF8h@kPxi08:e/FC r<]! 3{>CVze680F{#xFj&_' );
-define( 'LOGGED_IN_KEY',    '#7[4A>j6_0W2-xuA:&Z;:DV89==sOAKCM-n#vH?`k;bP,?8n6:5caIe[E%(bILc9' );
-define( 'NONCE_KEY',        '5m[Ev*C}d`1CK|kJ|WWT8f]p#|)8hr80ZIz#_~t7C[5G[U+$Pkhk_)W~SHYDe1$&' );
-define( 'AUTH_SALT',        ',zQj_Kd@8==%xuj NW:sjhwMh{5oMkx`CRLX~lJK 6$oWT7(PqA$7!cbeh!*@x)(' );
-define( 'SECURE_AUTH_SALT', '.RY}?Niw >hwx]=r%ih2Rb9NPQ>4M10HXU-}KL;7Cxk]VUP`q:771()RNEWE0pyq' );
-define( 'LOGGED_IN_SALT',   '@7+YLc6@V6?p;=B/%o]W]s)JB0ya [vPb ;YdUHh.^qe,h3dAug@nZd=/[.ayM_P' );
-define( 'NONCE_SALT',       'E!OjVhH,su(A-fOMHf3`.OrY63>x41:Q;+R~dZdzt8A48@FQkEmAITV eE3pKj8M' );
-
-/**#@-*/
-
-/**
- * WordPress database table prefix.
- *
- * You can have multiple installations in one database if you give each
- * a unique prefix. Only numbers, letters, and underscores please!
- */
 $table_prefix = 'wp_';
 
-/**
- * For developers: WordPress debugging mode.
- *
- * Change this to true to enable the display of notices during development.
- * It is strongly recommended that plugin and theme developers use WP_DEBUG
- * in their development environments.
- *
- * For information on other constants that can be used for debugging,
- * visit the documentation.
- *
- * @link https://wordpress.org/support/article/debugging-in-wordpress/
- */
-define( 'WP_DEBUG', false );
+define( 'WP_DEBUG', true );
 
 /* Add any custom values between this line and the "stop editing" line. */
-
 
 
 /* That's all, stop editing! Happy publishing. */
