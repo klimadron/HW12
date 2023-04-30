@@ -4,7 +4,6 @@ Vagrant.configure("2") do |config|
     nginx.vm.network "public_network", bridge: "eno1" , ip: "192.168.13.230"
     nginx.vm.network "private_network", ip: "192.168.102.10"
     nginx.vm.hostname = "nginx"
-
     nginx.vm.provider :virtualbox do |nginx|
       nginx.name = "nginx"
       nginx.check_guest_additions = false
@@ -22,9 +21,10 @@ Vagrant.configure("2") do |config|
     apache.vm.hostname = "apache"
     apache.vm.provider :virtualbox do |apache|
       apache.name = "apache"
+      apache.gui = true
       apache.check_guest_additions = false
-      apache.memory = 2048
-      apache.cpus = 2
+      apache.memory = 4096
+      apache.cpus = 3
       apache.customize ["modifyvm", :id, "--nic2", "natnetwork"]
       apache.customize ["modifyvm", :id, "--nat-network2", "102"]
       apache.customize ["modifyvm", :id, "--nic3", "natnetwork"]

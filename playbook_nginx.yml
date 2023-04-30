@@ -26,7 +26,10 @@
           renderer: networkd
           ethernets:
             enp0s3:
-              dhcp4: yes
+              addresses: [10.0.2.14/24]
+              routes:
+              - to : 10.0.2.0/24
+                via: 10.0.2.2
             enp0s8:
               dhcp4: no
               addresses: [192.168.13.230/24]
@@ -51,11 +54,53 @@
     ansible.builtin.systemd:
       name: nginx
       state: started
-  - name: Copy nginx conf
-    ansible.builtin.template:
-      src: "./nginx.conf"
-      dest: "/etc/nginx/nginx.conf" 
+  # - name: Copy nginx conf
+  #   ansible.builtin.template:
+  #     src: "./nginx.conf"
+  #     dest: "/etc/nginx/nginx.conf" 
   - name: Copy nginx conf
     ansible.builtin.template:
       src: "./default"
       dest: "/etc/nginx/sites-available/default"
+      backup: yes 
+  - name: start nginx
+    ansible.builtin.systemd:
+      name: nginx
+      state: reloaded    
+  roles:
+    - role: mrlesmithjr.netplan
+      become: yes
+      # This role will do nothing unless netplan_enabled is true.
+      netplan_enabled: true
+      
+      # This should point to an existing netplan configuration file 
+      # on your system which this role will overwrite, 
+      # or to a nonexistent file which netplan is aware of.
+      #
+      # The default is /etc/netplan/config.yaml.
+      netplan_config_file: /etc/netplan/50-vagrant.yaml
+      
+      # Ubuntu 18.04, for example, defaults to using networkd.
+      netplan_renderer: networkd
+      # Simple network configuration to add a single network interface.
+      # Configuration defined bellow will be written to the file defined
+      # above in `netplan_config_file`.
+  #     netplan_configuration:
+  #       network:
+  #         version: 2
+  #         renderer: networkd
+  #         ethernets:
+  #           enp0s3:
+  #             dhcp4: false
+  #           enp0s8:
+  #             dhcp4: no
+  #             addresses: [192.168.13.230/24]
+  #             gateway4: 192.168.13.1
+  #             nameservers:
+  #                 addresses: [8.8.8.8, 1.1.1.1]
+  #           enp0s9:
+  #             addresses: [192.168.102.10/24]
+  #             gateway4: 192.168.102.1
+  # tasks:
+  # - name: Apply netplan
+  #   command: sudo netplan apply    

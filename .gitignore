@@ -6,3 +6,6 @@ ubuntu*
 .vagrant/*
 box.ovf
 .Vagrantfile.kate-swp
+apache_CONF_GOOD/
+apache_CONF_GOOD*
+*.log

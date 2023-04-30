@@ -1,7 +1,6 @@
 - hosts: apache
   any_errors_fatal: true
   become: yes
-  become: true
   roles:
     - role: mrlesmithjr.netplan
       become: yes
@@ -37,6 +36,11 @@
             enp0s8:
               addresses: [192.168.102.11/24]
               gateway4: 192.168.102.1
+              routes:
+              - to : 0.0.0.0
+                via: 192.168.102.10
+              - to : 192.168.13.0/24
+                via: 192.168.102.10  
               nameservers:
                 addresses: [8.8.8.8, 1.1.1.1]
 
@@ -61,54 +65,100 @@
        - libapache2-mod-php
        - php
        - php-curl
+       - php-gd
        - php-json
        - php-mbstring
        - php-mysql
+       - php-xmlrpc
        - php-xml
+       - php-soap
        - php-cgi
+       - php-dom
+       - php-intl
+       - php-zip
       update_cache: yes
       state: latest
   - name: start Apache
     ansible.builtin.systemd:
       name: apache2
       state: started
+  # - name: Create a directory if it does not exist
+  #   ansible.builtin.file:
+  #     path: /var/www/html/
+  #     state: directory
+  #     mode: '0755'    
   - name: Download Wordpress
     unarchive:
       src: https://wordpress.org/latest.tar.gz
-      dest: /var/www/html/
+      dest: /var/www/html
       remote_src: True    
-  - name: Copy Apache conf
-    ansible.builtin.template:
-      src: "./apache2.conf"
-      dest: "/etc/apache2/apache2.conf"
+      remote_src: True 
   - name: Copy Apache conf2
     ansible.builtin.template:
       src: "./000-default.conf"
       dest: "/etc/apache2/sites-available/000-default.conf"
-  # - name: Copy using inline content
-  #   ansible.builtin.copy:
-  #     src: "./wp-config.php"
-  #     dest: "/var/www/html/wordpress/wp-config.php"
-  #     force: true
-
+  - name: Copy Apache conf2
+    ansible.builtin.copy:
+      src: "./wp-config.php"
+      dest: "/var/www/html/wordpress"
   - name: Change file ownership, group and permissions
     ansible.builtin.file:
-      path: /var/www/html/wordpress/
+      path: /var/www/html/wordpress
       owner: www-data
       group: www-data
-      mode: '755'   
+      mode: '777'   
   - name: Create a directory if it does not exist
     ansible.builtin.file:
       path: /var/www/html/wordpress/wp-content/uploads/
       state: directory
       owner: www-data
       group: www-data
-      mode: '0755'   
+      mode: '777'    
   - name: Reload Apache
     ansible.builtin.systemd:
       name: apache2
-      state: reloaded    
-  
-         
+      state: restarted   
 
+  # roles:
+  #   - role: mrlesmithjr.netplan
+  #     become: yes
+  #     # This role will do nothing unless netplan_enabled is true.
+  #     netplan_enabled: true
       
+  #     # This should point to an existing netplan configuration file 
+  #     # on your system which this role will overwrite, 
+  #     # or to a nonexistent file which netplan is aware of.
+  #     #
+  #     # The default is /etc/netplan/config.yaml.
+  #     netplan_config_file: /etc/netplan/50-vagrant.yaml
+      
+  #     # Ubuntu 18.04, for example, defaults to using networkd.
+  #     netplan_renderer: networkd
+  #     # Simple network configuration to add a single network interface.
+  #     # Configuration defined bellow will be written to the file defined
+  #     # above in `netplan_config_file`.
+  #     netplan_configuration:
+  #       network:
+  #         version: 2
+  #         renderer: networkd
+  #         ethernets:
+  #           enp0s3:
+  #             dhcp4: false
+  #           enp0s8:
+  #             addresses: [192.168.102.11/24]
+  #             gateway4: 192.168.102.1
+  #             routes:
+  #             - to : 0.0.0.0
+  #               via: 192.168.102.10
+  #             - to : 192.168.13.0/24
+  #               via: 192.168.102.10  
+  #             nameservers:
+  #               addresses: [8.8.8.8, 1.1.1.1]
+  #           enp0s9:
+  #             addresses: [192.168.100.2/24]
+  #             routes:
+  #             - to : 192.168.101.0/24
+  #               via: 192.168.100.2
+  # tasks:
+  # - name: Apply netplan
+  #   command: sudo netplan apply
