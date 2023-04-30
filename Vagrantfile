@@ -21,7 +21,6 @@ Vagrant.configure("2") do |config|
     apache.vm.hostname = "apache"
     apache.vm.provider :virtualbox do |apache|
       apache.name = "apache"
-      apache.gui = true
       apache.check_guest_additions = false
       apache.memory = 4096
       apache.cpus = 3

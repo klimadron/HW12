@@ -99,24 +99,24 @@
       src: https://wordpress.org/latest.tar.gz
       dest: /srv/www/
       remote_src: True    
-  # - name: Copy Apache conf2
-  #   ansible.builtin.copy:
-  #     src: "./apache2.conf"
-  #     dest: "/etc/apache2/apache2.conf"
+  - name: Copy Wordpress Conf
+    ansible.builtin.copy:
+      src: "./wp-config.php"
+      dest: "/srv/www/wordpress/wp-config.php"
   - name: Change file ownership, group and permissions
     ansible.builtin.file:
-      path: /var/www/wordpress
+      path: /var/www/wordpress/
       owner: www-data
       group: www-data
       mode: '755'
       recurse: yes
-  - name: Create a directory if it does not exist
-    ansible.builtin.file:
-      path: /var/www/wordpress/wp-content/uploads/
-      state: directory
-      owner: www-data
-      group: www-data
-      mode: '755' 
+  # - name: Create a directory if it does not exist
+  #   ansible.builtin.file:
+  #     path: /var/www/wordpress/wp-content/uploads/
+  #     state: directory
+  #     owner: www-data
+  #     group: www-data
+  #     mode: '755' 
   - name: Copy Apache conf2
     ansible.builtin.template:
       src: "./wordpress.conf"

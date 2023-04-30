@@ -1,4 +1,3 @@
-
 myservers:
   hosts:
      nginx:
@@ -6,23 +5,19 @@ myservers:
         ansible_port: 22
         ansible_user: vagrant
         ansible_ssh_private_key_file: /home/klima/.ssh/id_rsa
-        UserKnownHostsFile: /dev/null
-        StrictHostKeyChecking: no
-        ansible_python_interpreter: /usr/bin/python3
+#        ansible_ssh_common_args="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
      apache:
         ansible_host: 127.0.0.1
         ansible_port: 2200
         ansible_user: vagrant
         ansible_ssh_private_key_file: /home/klima/.ssh/id_rsa
-        UserKnownHostsFile: /dev/null
-        StrictHostKeyChecking: no
-        ansible_python_interpreter: /usr/bin/python3
+#        ansible_ssh_common_args="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+
      sql:
         ansible_host: 127.0.0.1
         ansible_port: 2201
         ansible_user: vagrant
         ansible_ssh_private_key_file: /home/klima/.ssh/id_rsa
-        UserKnownHostsFile: /dev/null
-        StrictHostKeyChecking: no
-        ansible_python_interpreter: /usr/bin/python3
+#        ansible_ssh_common_args="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+
 
