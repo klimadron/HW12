@@ -29,10 +29,6 @@
           ethernets:
             enp0s3:
               dhcp4: true
-              # addresses: [10.0.2.16/24]
-              # routes:
-              # - to : 10.0.2.0/24
-              #   via: 10.0.2.2
             enp0s8:
               addresses: [192.168.101.2/24]
               gateway4: 192.168.101.1
@@ -124,11 +120,6 @@
           version: 2
           renderer: networkd
           ethernets:
-            # enp0s3:
-            #    addresses: [10.0.2.16/24]
-            #    routes:
-            #    - to : 10.0.2.0/24
-            #      via: 10.0.2.2
             enp0s8:
               addresses: [192.168.101.2/24]
             enp0s9:

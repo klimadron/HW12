@@ -86,13 +86,13 @@
     ansible.builtin.file:
       path: /srv/www/
       state: directory
-      mode: '0777' 
+      mode: '0755' 
   - name: Change file ownership, group and permissions
     ansible.builtin.file:
       path: /srv/www/
       owner: www-data
       group: www-data
-      mode: '777'
+      mode: '755'
       recurse: yes       
   - name: Download Wordpress
     unarchive:
@@ -110,13 +110,6 @@
       group: www-data
       mode: '755'
       recurse: yes
-  # - name: Create a directory if it does not exist
-  #   ansible.builtin.file:
-  #     path: /var/www/wordpress/wp-content/uploads/
-  #     state: directory
-  #     owner: www-data
-  #     group: www-data
-  #     mode: '755' 
   - name: Copy Apache conf2
     ansible.builtin.template:
       src: "./wordpress.conf"
@@ -134,53 +127,4 @@
   - name: Reload Apache
     ansible.builtin.systemd:
       name: apache2
-      state: restarted   
-# - hosts: apache
-#   any_errors_fatal: true
-#   become: yes
-#   roles:
-#     - role: mrlesmithjr.netplan
-#       become: yes
-#       # This role will do nothing unless netplan_enabled is true.
-#       netplan_enabled: true
-        
-#         # This should point to an existing netplan configuration file 
-#         # on your system which this role will overwrite, 
-#         # or to a nonexistent file which netplan is aware of.
-#         #
-#         # The default is /etc/netplan/config.yaml.
-#       netplan_config_file: /etc/netplan/50-vagrant.yaml
-        
-#         # Ubuntu 18.04, for example, defaults to using networkd.
-#       netplan_renderer: networkd
-#         # Simple network configuration to add a single network interface.
-#         # Configuration defined bellow will be written to the file defined
-#         # above in `netplan_config_file`.
-#       netplan_configuration:
-#         network:
-#           version: 2
-#           renderer: networkd
-#           ethernets:
-#             enp0s3:
-#               addresses: [10.0.2.15/24]
-#               routes:
-#               - to : 10.0.2.0/24
-#                 via: 10.0.2.2
-#             enp0s8:
-#               addresses: [192.168.102.11/24]
-#               gateway4: 192.168.102.1
-#               routes:
-#               - to : 0.0.0.0
-#                 via: 192.168.102.10
-#               - to : 192.168.13.0/24
-#                 via: 192.168.102.10  
-#               nameservers:
-#                 addresses: [8.8.8.8, 1.1.1.1]
-#             enp0s9:
-#               addresses: [192.168.100.2/24]
-#               routes:
-#               - to : 192.168.101.0/24
-#                 via: 192.168.100.2
-  # tasks:              
-  # - name: Apply netplan
-  #   command: sudo netplan apply
+      state: restarted

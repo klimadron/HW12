@@ -53,10 +53,6 @@
     ansible.builtin.systemd:
       name: nginx
       state: started
-  # - name: Copy nginx conf
-  #   ansible.builtin.template:
-  #     src: "./nginx.conf"
-  #     dest: "/etc/nginx/nginx.conf" 
   - name: Copy nginx conf
     ansible.builtin.template:
       src: "./default"
