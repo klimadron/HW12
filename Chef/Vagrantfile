@@ -1,0 +1,38 @@
+Vagrant.configure("2") do |config|
+  config.vm.define :chef do |chef|
+    chef.vm.box = "ubuntu/focal64"
+    chef.vm.network "public_network", bridge: "eno1" , ip: "192.168.13.18"
+    chef.vm.network "private_network", ip: "192.168.100.10"
+    chef.vm.hostname = "chef"
+    chef.vm.provider :virtualbox do |chef|
+      chef.name = "chef"
+      chef.check_guest_additions = false
+      chef.memory = 6000
+      chef.cpus = 3
+      chef.customize ["modifyvm", :id, "--nic3", "natnetwork"]
+      chef.customize ["modifyvm", :id, "--nat-network3", "100"]
+    end
+  end
+  config.vm.define :client do |client|
+    client.vm.box = "ubuntu/focal64"
+    client.vm.network "public_network", bridge: "eno1" , ip: "192.168.13.19"
+    client.vm.network "private_network", ip: "192.168.100.11"
+    client.vm.hostname = "client"
+    client.vm.provider :virtualbox do |client|
+      client.name = "client"
+      client.check_guest_additions = false
+      client.memory = 4096
+      client.cpus = 2
+      client.customize ["modifyvm", :id, "--nic3", "natnetwork"]
+      client.customize ["modifyvm", :id, "--nat-network3", "100"]
+      config.vm.synced_folder ".", "/vagrant", disabled: true
+  config.vm.provision "shell" do |s|
+      ssh_pub_key = File.readlines("./id_rsa.pub").first.strip
+      s.inline = <<-SHELL
+        echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
+        echo #{ssh_pub_key} >> /root/.ssh/authorized_keys
+      SHELL
+      end    
+    end
+  end  
+end    
